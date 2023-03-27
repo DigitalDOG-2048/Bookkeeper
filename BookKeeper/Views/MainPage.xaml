@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BookKeeper.Models"
+             xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
+             x:DataType="viewmodels:RecordsViewModel"
+             Title="{Binding Title}"
+             x:Class="BookKeeper.Views.MainPage">
+    
+    <Grid RowDefinitions="50, Auto, 50, Auto"
+          ColumnDefinitions=".75*, .25*"
+          Padding="15"
+          RowSpacing="10">
+
+        <Picker Title="Select Account Book"
+                VerticalOptions="Center"
+                ItemsSource="{Binding AccountBookList}"
+                ItemDisplayBinding="{Binding AccountBookName}"/>
+        <Button Text="'{Mar}'" Grid.Column="1" HeightRequest="40" VerticalOptions="Center"/>
+
+        <Frame Grid.Row="1" Grid.ColumnSpan="2" Padding="20, 10">
+            <Grid RowDefinitions="Auto, Auto, Auto"
+                  ColumnDefinitions=".7*, .3*">
+                <Label Text="Total Balance" FontSize="18" Padding="0,5"/>
+                <Label Text="'{Amount}'" Grid.Column="1" FontSize="18" HorizontalOptions="End" Padding="0,5"/>
+
+                <Label Text="Expenses" Grid.Row="1"/>
+                <Label Text="'{Amount}'" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" />
+                <Label Text="Income" Grid.Row="2"/>
+                <Label Text="'{Amount}'" Grid.Row="2" Grid.Column="1" HorizontalOptions="End" />
+            </Grid>
+        </Frame>
+
+        <Label Text="Monthly Records"
+               FontSize="20"
+               VerticalOptions="Center"
+               Grid.Row="2"/>
+        <Button Text="Add"
+                Command="{Binding AddCommand}"
+                Grid.Row="2"
+                Grid.Column="1"
+                HeightRequest="40"/>
+
+        <CollectionView Grid.Row="3" Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Records}"
+                        SelectionMode="None">
+            <!--<CollectionView.ItemsSource>
+                <x:Array Type="{x:Type models:RecordModel}">
+                    <model:RecordModel
+                        Type="Dining"
+                        Note="Soup"
+                        Amount="-9.99"
+                        Time="5/1/2008 8:30:52 AM"/>
+                </x:Array>
+            </CollectionView.ItemsSource>-->
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:RecordModel">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="Red"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=DeleteCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="5,5">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=TapCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Type}" FontSize="18"/>
+                                    <Label Text="{Binding Note}" FontSize="10" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Amount}" FontSize="18" HorizontalOptions="End"/>
+                                    <Label Text="{Binding Time, StringFormat='{0:dd MMM yyyy}'}" FontSize="10" TextColor="Gray" HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+
+                                <BoxView HeightRequest="1" Color="LightGray" VerticalOptions="End"/>
+                            </Grid>
+                        </SwipeView>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
+
