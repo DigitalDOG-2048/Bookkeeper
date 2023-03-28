@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BookKeeper.Models"
+             xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
+             x:DataType="viewmodels:RecordsViewModel"
+             Title="{Binding Title}"
+             x:Class="BookKeeper.Views.RecordsPage">
+    
+    <Grid RowDefinitions="50, 50, Auto, *"
+          ColumnDefinitions=".75*, .25*"
+          Padding="15"
+          RowSpacing="10">
+
+        <Picker Title="Select Account Book"
+                VerticalOptions="Center"
+                ItemsSource="{Binding AccountBookList}"
+                ItemDisplayBinding="{Binding AccountBookName}"
+                Grid.ColumnSpan="2"/>
+
+        <Button Text="'{Mar}'"
+                Command="{Binding AddCommand}"
+                Grid.Row="1"
+                HorizontalOptions="Start"/>
+        <Button Text="Add"
+                Command="{Binding AddCommand}"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalOptions="End"/>
+        
+        <Frame Grid.Row="2" Grid.ColumnSpan="2" Padding="20, 10" Margin="0, 10">
+            <Grid RowDefinitions="Auto, Auto, Auto"
+                  ColumnDefinitions=".7*, .3*">
+                <Label Text="Total Balance" Style="{StaticResource TitleLabel}" Padding="0,10"/>
+                <Label Text="'{Amount}'" Style="{StaticResource TitleLabel}" Grid.Column="1" HorizontalOptions="End" Padding="0,10"/>
+
+                <Label Text="Expenses" Grid.Row="1"/>
+                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" />
+                <Label Text="Income" Grid.Row="2"/>
+                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" HorizontalOptions="End" />
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="3" Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Records}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Record">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="Red"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=DeleteCommand}"
+                                               CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="5,5">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToDetailCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Type}" Style="{StaticResource NormalLabel}"/>
+                                    <Label Text="{Binding Note}" Style="{StaticResource SmallLabel}"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Amount}" Style="{StaticResource NormalLabel}" HorizontalOptions="End"/>
+                                    <Label Text="{Binding Time, StringFormat='{0:dd MMM yyyy}'}" Style="{StaticResource SmallLabel}" HorizontalOptions="End"/>
+                                </VerticalStackLayout>
+
+                                <BoxView HeightRequest="1" Color="LightGray" VerticalOptions="End"/>
+                            </Grid>
+                        </SwipeView>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
+

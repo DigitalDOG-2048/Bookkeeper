@@ -8,12 +8,12 @@ namespace BookKeeper.ViewModels;
 public partial class RecordsViewModel : BaseViewModel
 {
     RecordService recordService;
-    public ObservableCollection<RecordModel> Records { get; set; } = new();
-    public ObservableCollection<AccountBookModel> AccountBookList { get; set; } = new();
+    public ObservableCollection<Record> Records { get; set; } = new();
+    public ObservableCollection<AccountBook> AccountBookList { get; set; } = new();
 
     public RecordsViewModel(RecordService recordService)
 	{
-        Title = "BOOKKEEPER";
+        Title = "Monthly Records";
         this.recordService = recordService;
         GetAccountBookList();
         GetRecordsAsync();
@@ -27,6 +27,19 @@ public partial class RecordsViewModel : BaseViewModel
             foreach (var accountBook in response)
                 AccountBookList.Add(accountBook);
         }
+    }
+
+    [RelayCommand]
+    async Task GoToDetailAsync(Record record)
+    {
+        if (record == null)
+            return;
+
+        await Shell.Current.GoToAsync($"{nameof(DetailPage)}", true,
+            new Dictionary<string, object>
+        {
+            {"Record", record}
+        });
     }
 
     [RelayCommand]
@@ -64,18 +77,12 @@ public partial class RecordsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    void Delete(RecordModel record)
+    void Delete(Record record)
     {
         if (Records.Contains(record))
         {
             Records.Remove(record);
         }
-    }
-
-    [RelayCommand]
-    async Task Tap(RecordModel record)
-    {
-        await Shell.Current.GoToAsync($"{nameof(DetailPage)}?RecordModel={record}");
     }
 }
 

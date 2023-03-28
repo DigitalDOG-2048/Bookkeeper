@@ -2,8 +2,10 @@
 
 public partial class DetailPage : ContentPage
 {
-	public DetailPage()
+
+    public DetailPage(RecordDetailViewModel viewModel)
 	{
 		InitializeComponent();
+		BindingContext = viewModel;
 	}
 }

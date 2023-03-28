@@ -8,7 +8,7 @@ public partial class MainViewModel : BaseViewModel
 {
     public MainViewModel()
     {
-        Title = "Bookkeeper";
+        Title = "BookKeeper";
     }
 }
 

@@ -21,16 +21,16 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 
         builder.Services.AddSingleton<MainPage>();
-        builder.Services.AddSingleton<MainViewModel>();
-		builder.Services.AddSingleton<RecordService>();
-		//builder.Services.AddSingleton<AccountBookService>();
-
-        //builder.Services.AddTransient<DetailPage>();
-        builder.Services.AddTransient<RecordsViewModel>();
-
+        builder.Services.AddTransient<RecordsPage>();
         builder.Services.AddTransient<DetailPage>();
-        builder.Services.AddTransient<DetailViewModel>();
+
+        builder.Services.AddSingleton<MainViewModel>();
+        builder.Services.AddTransient<RecordsViewModel>();
+        builder.Services.AddTransient<RecordDetailViewModel>();
+
+        builder.Services.AddSingleton<RecordService>();
 #endif
+
 
         return builder.Build();
 	}

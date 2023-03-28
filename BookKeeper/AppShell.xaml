@@ -8,8 +8,8 @@
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:Views.MainPage}"
-        Route="Views.MainPage" />
+        ContentTemplate="{DataTemplate local:Views.RecordsPage}"
+        Route="Views.RecordsPage" />
 
 </Shell>
 
