@@ -18,13 +18,13 @@
                     <Label Style="{StaticResource NormalLabel}" Text="Account Book:" Grid.Row="2"/>
                     <Label Style="{StaticResource NormalLabel}" Text="{Binding Record.AccountBookName}" Grid.Row="2" HorizontalOptions="End"/>
                     <Label Style="{StaticResource NormalLabel}" Text="Time:" Grid.Row="3"/>
-                    <Label Style="{StaticResource NormalLabel}" Text="{Binding Record.Time}" Grid.Row="3" HorizontalOptions="End"/>
+                    <Label Style="{StaticResource NormalLabel}" Text="{Binding Record.DateTime}" Grid.Row="3" HorizontalOptions="End"/>
                     <Label Style="{StaticResource NormalLabel}" Text="Remarks:" Grid.Row="4"/>
                     <Label Style="{StaticResource NormalLabel}" Text="{Binding Record.Note}" Grid.Row="4" HorizontalOptions="End"/>
                 </Grid>
             </Frame>
             
-            <Button Text="Delete" BackgroundColor="{StaticResource Gray400}" Grid.Row="1" Command="{Binding DeleteCommand}" VerticalOptions="End"/>
+            <Button Text="Delete" BackgroundColor="{StaticResource Gray500}" Grid.Row="1" Command="{Binding DeleteCommand}" VerticalOptions="End"/>
             <Button Text="Edit" Grid.Row="1" Grid.Column="1" Command="{Binding EditCommand}" VerticalOptions="End"/>
         </Grid>
 

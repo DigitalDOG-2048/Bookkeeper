@@ -23,7 +23,7 @@ public class RecordService
             Type = "Dining",
             Note = "Soup",
             Amount = (decimal)-9.99,
-            Time = DateTime.Now,
+            DateTime = DateTime.Now,
             AccountBookID = 1,
             AccountBookName = "Default"
         });

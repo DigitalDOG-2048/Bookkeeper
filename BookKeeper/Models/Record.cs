@@ -6,8 +6,13 @@ public class Record
 	public string Type { get; set; }
 	public string Note { get; set; }
     public decimal Amount { get; set; }
-    public DateTime Time { get; set; }
+    public DateTime DateTime { get; set; }
     public int AccountBookID { get; set; }
     public string AccountBookName { get; set; }
+
+    //public string GetMonthString()
+    //{
+    //    return DateTime.Month.ToString();
+    //}
 }
 

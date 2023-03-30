@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Maui.Views;
 using BookKeeper.Services;
 using BookKeeper.Views;
 
 namespace BookKeeper.ViewModels;
 
+[QueryProperty("DateTime", "DateTime")]
 public partial class RecordsViewModel : BaseViewModel
 {
     RecordService recordService;
@@ -19,6 +19,9 @@ public partial class RecordsViewModel : BaseViewModel
         GetRecordsAsync();
     }
 
+    [ObservableProperty]
+    DateTime dateTime = DateTime.Now;
+
     async void GetAccountBookList()
     {
         var response = await recordService.GetAccountBookList();
@@ -27,6 +30,22 @@ public partial class RecordsViewModel : BaseViewModel
             foreach (var accountBook in response)
                 AccountBookList.Add(accountBook);
         }
+    }
+
+    [RelayCommand]
+    async void PopupCalendar(DateTime dateTime)
+    {
+        var result = await Shell.Current.ShowPopupAsync(new CalendarPopup());
+    }
+
+    [RelayCommand]
+    async Task GoToAddAsync(DateTime dateTime)
+    {
+        await Shell.Current.GoToAsync($"{nameof(AddPage)}", true,
+            new Dictionary<string, object>
+            {
+                {"DateTime", dateTime}
+            });
     }
 
     [RelayCommand]
@@ -51,13 +70,13 @@ public partial class RecordsViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            var records = await recordService.GetRecords();
+            var response = await recordService.GetRecords();
 
             if (Records.Count != 0)
                 Records.Clear();
 
-            foreach (var transction in records)
-                Records.Add(transction);
+            foreach (var record in response)
+                Records.Add(record);
         }
         catch (Exception ex)
         {
@@ -70,11 +89,11 @@ public partial class RecordsViewModel : BaseViewModel
         }
 	}
 
-    [RelayCommand]
-    async Task Add()
-    {
+    //[RelayCommand]
+    //async Task Add()
+    //{
 
-    }
+    //}
 
     [RelayCommand]
     void Delete(Record record)
