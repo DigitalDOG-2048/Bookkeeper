@@ -9,6 +9,7 @@ public class Record
     public DateTime DateTime { get; set; }
     public int AccountBookID { get; set; }
     public string AccountBookName { get; set; }
+    public bool isExpenses { get; set; }
 
     //public string GetMonthString()
     //{

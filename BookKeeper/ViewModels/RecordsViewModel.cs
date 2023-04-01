@@ -1,26 +1,38 @@
 ﻿using CommunityToolkit.Maui.Views;
 using BookKeeper.Services;
 using BookKeeper.Views;
+using Mopups.Services;
+using Mopups.Interfaces;
+using Syncfusion.Maui.Calendar;
+using System;
+using Xamarin.Google.Crypto.Tink.Mac;
 
 namespace BookKeeper.ViewModels;
 
-[QueryProperty("DateTime", "DateTime")]
+[QueryProperty("CalendarDateRange", "CalendarDateRange")]
 public partial class RecordsViewModel : BaseViewModel
 {
     RecordService recordService;
+    IPopupNavigation popupNavigation;
+
     public ObservableCollection<Record> Records { get; set; } = new();
     public ObservableCollection<AccountBook> AccountBookList { get; set; } = new();
 
-    public RecordsViewModel(RecordService recordService)
+    [ObservableProperty]
+    CalendarDateRange calendarDateRange;
+
+    [ObservableProperty]
+    AccountBook accountBook;
+
+    public RecordsViewModel(RecordService recordService, IPopupNavigation popupNavigation)
 	{
-        Title = "Monthly Records";
+        Title = "Records";
         this.recordService = recordService;
+        this.popupNavigation = popupNavigation;
+
         GetAccountBookList();
         GetRecordsAsync();
     }
-
-    [ObservableProperty]
-    DateTime dateTime = DateTime.Now;
 
     async void GetAccountBookList()
     {
@@ -33,19 +45,22 @@ public partial class RecordsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async void PopupCalendar(DateTime dateTime)
+    async Task PopupCalendarAsync()
     {
-        var result = await Shell.Current.ShowPopupAsync(new CalendarPopup());
+        //var result = await Shell.Current.ShowPopupAsync(new CalendarPopup(popupResult));
+        //await Shell.Current.DisplayAlert("Result", $"Result: {result}", "OK");
+        //await popupNavigation.PushAsync(new CalendarPopup());
+        await Shell.Current.GoToAsync($"{nameof(CalendarPopup)}", true);
     }
 
     [RelayCommand]
-    async Task GoToAddAsync(DateTime dateTime)
+    async Task GoToAddAsync()
     {
-        await Shell.Current.GoToAsync($"{nameof(AddPage)}", true,
+        await Shell.Current.GoToAsync($"{nameof(AddPage)}", false,
             new Dictionary<string, object>
-            {
-                {"DateTime", dateTime}
-            });
+        {
+            {"AccountBook", accountBook}
+        });
     }
 
     [RelayCommand]
@@ -70,7 +85,11 @@ public partial class RecordsViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            var response = await recordService.GetRecords();
+            var response = calendarDateRange == null ?
+                await recordService.GetRecords() :
+                await recordService.GetRecordsOfSelectedDateRange(
+                    (DateTime)calendarDateRange.StartDate,
+                    (DateTime)calendarDateRange.EndDate);
 
             if (Records.Count != 0)
                 Records.Clear();

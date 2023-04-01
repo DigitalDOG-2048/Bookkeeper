@@ -13,9 +13,9 @@ public partial class RecordDetailViewModel : BaseViewModel
 	Record record;
 
     [RelayCommand]
-    async void Edit(Record record)
+    async void Edit()
     {
-
+        DateTime dateTime = record.DateTime;
     }
 
     [RelayCommand]

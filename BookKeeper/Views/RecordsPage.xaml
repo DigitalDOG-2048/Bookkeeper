@@ -7,7 +7,7 @@
              Title="{Binding Title}"
              x:Class="BookKeeper.Views.RecordsPage">
     
-    <Grid RowDefinitions="Auto, 40, Auto, *"
+    <Grid RowDefinitions="Auto, Auto, *"
           ColumnDefinitions=".7*, .3*"
           Padding="20,10"
           RowSpacing="10">
@@ -16,17 +16,18 @@
                 VerticalOptions="Center"
                 ItemsSource="{Binding AccountBookList}"
                 ItemDisplayBinding="{Binding AccountBookName}"
+                SelectedItem="{Binding AccountBook, Mode=TwoWay}"
                 Grid.ColumnSpan="2"/>
 
         <ImageButton Source="calendar.png"
                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=PopupCalendarCommand}"
-                     CommandParameter="{Binding DateTime}"
+                     CommandParameter="{Binding CalendarDateRange}"
                      Grid.Row="1"
                      HeightRequest="35"
+                     WidthRequest="50"
                      HorizontalOptions="Start"/>
         <Button Text="+ Add"
                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
-                CommandParameter="{Binding DateTime}"
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalOptions="End"/>
@@ -36,21 +37,8 @@
                      Grid.Row="1"
                      Grid.Column="1"
                      HorizontalOptions="End"/>-->
-        
-        <Frame Grid.Row="2" Grid.ColumnSpan="2" Margin="0, 10">
-            <Grid RowDefinitions="Auto, Auto, Auto"
-                  ColumnDefinitions=".6*, .4*">
-                <Label Text="Total Balance" Style="{StaticResource TitleLabel}" Padding="0,10"/>
-                <Label Text="'{Amount}'" Style="{StaticResource TitleLabel}" Grid.Column="1" HorizontalOptions="End" Padding="0,10"/>
 
-                <Label Text="Expenses" Grid.Row="1"/>
-                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" />
-                <Label Text="Income" Grid.Row="2"/>
-                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" HorizontalOptions="End" />
-            </Grid>
-        </Frame>
-
-        <CollectionView Grid.Row="3" Grid.ColumnSpan="2"
+        <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
                         ItemsSource="{Binding Records}"
                         SelectionMode="None"
                         EmptyView="No Record">

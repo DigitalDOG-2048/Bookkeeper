@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BookKeeper.Views.SummaryPage"
+             Title="Summary">
+    <VerticalStackLayout Padding="10">
+        <Frame Margin="0, 10">
+            <Grid RowDefinitions="Auto, Auto, Auto"
+                  ColumnDefinitions=".6*, .4*">
+                <Label Text="Total Balance" Style="{StaticResource TitleLabel}" Padding="0,10"/>
+                <Label Text="'{Amount}'" Style="{StaticResource TitleLabel}" Grid.Column="1" HorizontalOptions="End" Padding="0,10"/>
+
+                <Label Text="Expenses" Grid.Row="1"/>
+                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" />
+                <Label Text="Income" Grid.Row="2"/>
+                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" HorizontalOptions="End" />
+            </Grid>
+        </Frame>
+
+    </VerticalStackLayout>
+</ContentPage>

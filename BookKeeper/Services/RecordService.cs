@@ -25,9 +25,20 @@ public class RecordService
             Amount = (decimal)-9.99,
             DateTime = DateTime.Now,
             AccountBookID = 1,
-            AccountBookName = "Default"
+            AccountBookName = "Default",
+            isExpenses = true
         });
         
+        return recordList;
+    }
+
+    public async Task<List<Record>> GetRecordsOfSelectedDateRange(DateTime startDate, DateTime endDate)
+    {
+        if (recordList?.Count > 0)
+            return recordList;
+
+        // Get recordList from database
+
         return recordList;
     }
 

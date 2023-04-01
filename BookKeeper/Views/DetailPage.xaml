@@ -24,8 +24,12 @@
                 </Grid>
             </Frame>
             
-            <Button Text="Delete" BackgroundColor="{StaticResource Gray500}" Grid.Row="1" Command="{Binding DeleteCommand}" VerticalOptions="End"/>
-            <Button Text="Edit" Grid.Row="1" Grid.Column="1" Command="{Binding EditCommand}" VerticalOptions="End"/>
+            <Button Text="Delete" BackgroundColor="{StaticResource Gray500}" Grid.Row="1"
+                    Command="{Binding DeleteCommand}"
+                    VerticalOptions="End"/>
+            <Button Text="Edit" Grid.Row="1" Grid.Column="1"
+                    Command="{Binding EditCommand}"
+                    VerticalOptions="End"/>
         </Grid>
 
 </ContentPage>

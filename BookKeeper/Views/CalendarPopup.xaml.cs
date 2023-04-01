@@ -1,31 +1,37 @@
-﻿using CommunityToolkit.Maui.Views;
+﻿using System;
+using CommunityToolkit.Maui.Views;
+using Mopups.Interfaces;
+using Mopups.Services;
 using Syncfusion.Maui.Calendar;
 
 namespace BookKeeper.Views;
 
-public partial class CalendarPopup : Popup
+public partial class CalendarPopup
 {
+    private IPopupNavigation _popupNavigation;
 
     public CalendarPopup()
 	{
         InitializeComponent();
+        //BindingContext = viewModel;
     }
 
-    private DateTime startDate;
-    private DateTime endDate;
-
-    private void OnCalendarSelectionChanged(System.Object sender, CalendarSelectionChangedEventArgs e)
+    void DateRangeCalendar_SelectionChanged(System.Object sender, Syncfusion.Maui.Calendar.CalendarSelectionChangedEventArgs e)
     {
-
     }
 
-    private void CancelButton_Clicked(System.Object sender, System.EventArgs e)
+    async void SelectButton_Clicked(System.Object sender, System.EventArgs e)
     {
-        this.Close();
+        CalendarDateRange calendarDateRange = this.DateRangeCalendar.SelectedDateRange;
+        await Shell.Current.GoToAsync($"{nameof(RecordsPage)}", false,
+            new Dictionary<string, object>
+            {
+                {"CalendarDateRange", calendarDateRange}
+            });
     }
 
-    private void SelectButton_Clicked(System.Object sender, System.EventArgs e)
+    void CancelButton_Clicked(System.Object sender, System.EventArgs e)
     {
-        this.Close();
+        Shell.Current.GoToAsync("..", true);
     }
 }

@@ -17,7 +17,7 @@
        </Tab>
        <Tab Title="Summary"
             Icon="calendar.png">
-           <ShellContent ContentTemplate="{DataTemplate views:RecordsPage}" />
+           <ShellContent ContentTemplate="{DataTemplate views:SummaryPage}" />
        </Tab>
     </TabBar>
 
