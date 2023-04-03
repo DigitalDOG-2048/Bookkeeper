@@ -26,26 +26,18 @@
                 <calendar:SfCalendar x:Name="DateRangeCalendar"
                                      SelectionMode="Range"
                                      RangeSelectionDirection="Both"
-                                     SelectedDateRange="{Binding CalendarDateRange}"
+                                     SelectedDateRange="{Binding SelectedDateRange, Mode=TwoWay}"
                                      MaximumDate="{Binding Source={x:Static system:DateTime.Now}, StringFormat='{0:M/d/yyyy}'}"
                                      Padding="10">
-                    <!--<calendar:SfCalendar.Behaviors>
-                        <viewmodels:CalendarBehavior/>
-                    </calendar:SfCalendar.Behaviors>-->
                 </calendar:SfCalendar>
 
                 <Grid ColumnDefinitions=".5*, .5*">
-                    <!--<Button Text="Cancel" BackgroundColor="{StaticResource Gray500}"
+                    <Button Text="Cancel" BackgroundColor="{StaticResource Gray500}"
                             HorizontalOptions="Start"
                             Command="{Binding CancelCommand}"/>
                     <Button Text="Select" Grid.Column="1" HorizontalOptions="End"
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CalendarViewModel}}, Path=SelectCommand}"
-                            CommandParameter="{Binding CalendarDateRange}"/>-->
-                    <Button Text="Cancel" BackgroundColor="{StaticResource Gray500}"
-                            HorizontalOptions="Start"
-                            Clicked="CancelButton_Clicked"/>
-                    <Button Text="Select" Grid.Column="1" HorizontalOptions="End"
-                            Clicked="SelectButton_Clicked"/>
+                            CommandParameter="{Binding CalendarDateRange}"/>
                 </Grid>
 
             </VerticalStackLayout>

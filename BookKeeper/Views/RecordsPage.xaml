@@ -4,24 +4,22 @@
              xmlns:models="clr-namespace:BookKeeper.Models"
              xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
              x:DataType="viewmodels:RecordsViewModel"
-             Title="{Binding Title}"
-             x:Class="BookKeeper.Views.RecordsPage">
+             x:Class="BookKeeper.Views.RecordsPage"
+             Title="{Binding Title}">
     
     <Grid RowDefinitions="Auto, Auto, *"
           ColumnDefinitions=".7*, .3*"
           Padding="20,10"
           RowSpacing="10">
 
-        <Picker Title="Select Account Book"
-                VerticalOptions="Center"
+        <Picker VerticalOptions="Center"
                 ItemsSource="{Binding AccountBookList}"
                 ItemDisplayBinding="{Binding AccountBookName}"
-                SelectedItem="{Binding AccountBook, Mode=TwoWay}"
+                SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
                 Grid.ColumnSpan="2"/>
 
         <ImageButton Source="calendar.png"
                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=PopupCalendarCommand}"
-                     CommandParameter="{Binding CalendarDateRange}"
                      Grid.Row="1"
                      HeightRequest="35"
                      WidthRequest="50"
@@ -33,7 +31,6 @@
                 HorizontalOptions="End"/>
         <!--<ImageButton Source="plus_square.png"
                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
-                     CommandParameter="{Binding DateTime}"
                      Grid.Row="1"
                      Grid.Column="1"
                      HorizontalOptions="End"/>-->
@@ -63,7 +60,7 @@
 
                                 <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
                                     <Label Text="{Binding Type}" Style="{StaticResource NormalLabel}"/>
-                                    <Label Text="{Binding Note}" Style="{StaticResource SmallLabel}"/>
+                                    <Label Text="{Binding Remarks}" Style="{StaticResource SmallLabel}"/>
                                 </VerticalStackLayout>
                                 <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
                                     <Label Text="{Binding Amount}" Style="{StaticResource NormalLabel}" HorizontalOptions="End"/>

@@ -3,9 +3,7 @@ using Syncfusion.Maui.Core.Hosting;
 using BookKeeper.Views;
 using BookKeeper.Services;
 using CommunityToolkit.Maui;
-using Mopups.Hosting;
-using Mopups.Services;
-using Mopups.Interfaces;
+using BookKeeper.Data;
 
 namespace BookKeeper;
 public static class MauiProgram
@@ -16,7 +14,6 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
-            .ConfigureMopups()
             .ConfigureSyncfusionCore()
             .ConfigureFonts(fonts =>
         {
@@ -40,8 +37,12 @@ public static class MauiProgram
         builder.Services.AddTransient<AddViewModel>();
 
         builder.Services.AddSingleton<RecordService>();
-        builder.Services.AddSingleton<IPopupNavigation>(MopupService.Instance);
+
+        builder.Services.AddSingleton<RecordDatabase>(s =>
+            ActivatorUtilities.CreateInstance<RecordDatabase>(s));
+
 #endif
+
         return builder.Build();
     }
 }

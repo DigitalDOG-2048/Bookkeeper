@@ -1,7 +1,16 @@
-﻿namespace BookKeeper.Models;
+﻿using SQLite;
 
+namespace BookKeeper.Models;
+
+[Table("AccountBooks")]
 public class AccountBook
 {
-    public int AccountBookID { get; set; }
+    [PrimaryKey, AutoIncrement, Column("ID")]
+    public int ID { get; set; }
+
+    [MaxLength(250), Unique]
     public string AccountBookName { get; set; }
+
+    //[OneToMany]
+    public List<Record> Records { get; set; }
 }
