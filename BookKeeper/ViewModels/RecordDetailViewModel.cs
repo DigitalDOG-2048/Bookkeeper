@@ -15,17 +15,29 @@ public partial class RecordDetailViewModel : BaseViewModel
     }
 
 	[ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AccountBookName))]
+    //[NotifyPropertyChangedFor(nameof(AccountBookName))]
     Record record;
 
-    public string AccountBookName => recordService.GetAccountBook(record.AccountBookID).AccountBookName;
+    //public string AccountBookName => recordService.GetAccountBook(Record.AccountBookID).AccountBookName;
+
+    [ObservableProperty]
+    string accountBookName;
+
+    partial void OnRecordChanged(Record value)
+    {
+        if (value == null)
+            return;
+
+        AccountBook accountBook = recordService.GetAccountBook(value.AccountBookID);
+        AccountBookName = accountBook.AccountBookName;
+    }
 
     [RelayCommand]
     async Task EditAsync()
     {
         // todo
 
-        //SaveRecordAsync
+        await recordService.EditRecordAsync(record);
     }
 
     [RelayCommand]

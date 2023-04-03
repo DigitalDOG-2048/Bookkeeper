@@ -35,12 +35,8 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <MauiImage Remove="Resources\Images\plus.png" />
-	  <MauiImage Remove="Resources\Images\records.png" />
-	  <MauiImage Remove="Resources\Images\plus_square.png" />
 	  <MauiImage Remove="Resources\Images\calendar.png" />
 	  <MauiImage Remove="Resources\Images\plus.png" />
-	  <MauiImage Remove="Resources\Images\records.png" />
-	  <MauiImage Remove="Resources\Images\plus_square.png" />
 	  <MauiImage Remove="Resources\Images\calendar.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -52,9 +48,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
-
-		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
@@ -78,11 +71,12 @@
 	  <None Remove="ViewModels\" />
 	  <None Remove="Models\" />
 	  <None Remove="Resources\Images\plus.png" />
-	  <None Remove="Resources\Images\records.png" />
 	  <None Remove="Resources\Images\calendar.png" />
-	  <None Remove="Resources\Images\plus_square.png" />
 	  <None Remove="Resources\.DS_Store" />
 	  <None Remove="Data\" />
+	  <None Remove="Resources\Images\search.png" />
+	  <None Remove="Resources\Images\search_doc.png" />
+	  <None Remove="Resources\Images\doc.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Services\" />
@@ -105,8 +99,12 @@
 	  <BundleResource Include="Resources\Images\plus_square.png" />
 	  <BundleResource Include="Resources\Images\calendar.png" />
 	  <BundleResource Include="Resources\Images\plus.png" />
-	  <BundleResource Include="Resources\Images\records.png" />
-	  <BundleResource Include="Resources\Images\plus_square.png" />
 	  <BundleResource Include="Resources\Images\calendar.png" />
+	  <BundleResource Include="Resources\Images\search.png" />
+	  <BundleResource Include="Resources\Images\search.png" />
+	  <BundleResource Include="Resources\Images\search_doc.png" />
+	  <BundleResource Include="Resources\Images\search_doc.png" />
+	  <BundleResource Include="Resources\Images\doc.png" />
+	  <BundleResource Include="Resources\Images\doc.png" />
 	</ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ namespace BookKeeper.Models;
 public class Record
 {
     [PrimaryKey, AutoIncrement, Column("ID")]
-    public int ID { get; set; }
+    public Guid ID { get; set; }
 
     public ExpensesType ExpensesType { get; set; }
     public IncomeType IncomeType { get; set; }
@@ -19,18 +19,6 @@ public class Record
 
     //[Column("AccountBookID"), ForeignKey(typeof(AccountBook))]
     public int AccountBookID { get; set; }
-
-    //public static string RecordTypeToString(RecordType type)
-    //{
-    //    string camelCase = Enum.GetName(typeof(RecordType), type);
-    //    return Regex.Replace(camelCase, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
-    //}
-
-    //public static RecordType stringToRecordType(string typeStr)
-    //{
-    //    string camelCase = Regex.Replace(typeStr, @"\s+", "");
-    //    return (RecordType)Enum.Parse(typeof(RecordType), camelCase);
-    //}
 }
 
 public enum ExpensesType

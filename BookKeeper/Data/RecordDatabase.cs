@@ -13,10 +13,17 @@ namespace BookKeeper.Data
 
             database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
-            // for testing
-            await database.DropTableAsync<Record>();
-
             await database.CreateTableAsync<Record>();
+        }
+
+        public async Task<List<Record>> GetRecordsByKeywords(DateTime startDate, DateTime endDate, List<string> keywords)
+        {
+            await Init();
+
+            // todo
+            List<Record> records = await database.Table<Record>().ToListAsync();
+
+            return records;
         }
 
         public async Task<List<Record>> GetRecordsByDateRangeAsync(DateTime startDate, DateTime endDate)
@@ -30,23 +37,21 @@ namespace BookKeeper.Data
             return records;
         }
 
-        public async Task<int> SaveRecordAsync(Record record)
+        public async Task<int> UpdateRecordAsync(Record record)
         {
             await Init();
 
-            if (record.ID != 0)
-            {
-                // Update an existing record
-                return await database.UpdateAsync(record);
-            }
-            else
-            {
-                // Save a new record
-                return await database.InsertAsync(record);
-            }
+            return await database.UpdateAsync(record);
         }
 
-        public async Task<int> DeleteRecordAsync(int id)
+        public async Task<int> InsertRecordAsync(Record record)
+        {
+            await Init();
+
+            return await database.InsertAsync(record);
+        }
+
+        public async Task<int> DeleteRecordAsync(Guid id)
         {
             await Init();
 

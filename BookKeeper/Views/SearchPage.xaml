@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:BookKeeper.Models"
              xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
-             x:DataType="viewmodels:RecordsViewModel"
-             x:Class="BookKeeper.Views.RecordsPage"
-             Title="{Binding Title}">
+             x:DataType="viewmodels:SearchViewModel"
+             x:Class="BookKeeper.Views.SearchPage"
+             Title="Search Records">
     <ScrollView>
         <Grid RowDefinitions="Auto, Auto, *"
               ColumnDefinitions=".7*, .3*"
@@ -15,24 +15,33 @@
             <Picker VerticalOptions="Center"
                     ItemsSource="{Binding AccountBookList}"
                     ItemDisplayBinding="{Binding AccountBookName}"
-                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
-                    Grid.ColumnSpan="2"/>
-
-            <ImageButton Source="calendar.png"
-                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=PopupCalendarCommand}"
-                         Grid.Row="1"
-                         HeightRequest="30"
-                         HorizontalOptions="Start"/>
-            <Button Text="+ Add"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
-                    Grid.Row="1"
+                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"/>
+            
+            <Picker VerticalOptions="End"
+                    ItemsSource="{Binding YearList}"
+                    ItemDisplayBinding="{Binding .}"
+                    SelectedItem="{Binding Year, Mode=TwoWay}"
                     Grid.Column="1"
                     HorizontalOptions="End"/>
 
-            <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
-                            ItemsSource="{Binding Records}"
+            <Entry x:Name="SearchKeyword" Placeholder="Search Records"
+                    Text="{Binding Keyword}"
+                    ReturnType="Done"
+                    VerticalOptions="Center"
+                    HorizontalOptions="StartAndExpand"
+                    Grid.Row="1"
+                   WidthRequest="300"/>
+            <ImageButton Source="search.png"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=SearchCommand}"
+                         HeightRequest="30"
+                         VerticalOptions="Center"
+                         HorizontalOptions="End"
+                         Grid.Row="1" Grid.Column="1"/>
+
+            <CollectionView ItemsSource="{Binding Records}"
                             SelectionMode="None"
-                            EmptyView="No Record">
+                            EmptyView="No Record"
+                            Grid.Row="2" Grid.ColumnSpan="2">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Record">
                             <SwipeView>
@@ -73,4 +82,3 @@
         </Grid>
     </ScrollView>
 </ContentPage>
-

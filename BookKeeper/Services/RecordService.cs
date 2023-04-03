@@ -31,28 +31,52 @@ public class RecordService
         return await recordDatabase.GetRecordsByDateRangeAsync(startDate, endDate);
     }
 
+    public async Task<List<Record>> GetYearRecordsByKeywordAsync(int year, string keyword)
+    {
+        if (!Constants.YearRange.Contains(year))
+            year = DateTime.Now.Year;
+
+        DateTime firstDayOfYear = new DateTime(year, 1, 1);
+        DateTime lastDayOfYear = new DateTime(year, 12, 30);
+
+        if (keyword == null || keyword == "")
+        {
+            return await recordDatabase.GetRecordsByDateRangeAsync(firstDayOfYear, lastDayOfYear);
+        }
+
+        List<string> keywordList = keyword.Split(' ').ToList();
+        return await recordDatabase.GetRecordsByKeywords(firstDayOfYear, lastDayOfYear, keywordList);
+    }
+
     public async Task<List<AccountBook>> GetAccountBookList()
     {
         if (accountBookList?.Count > 0)
             return accountBookList;
 
         // get account books from database
-        accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 1 });
-        accountBookList.Add(new AccountBook { AccountBookName = "Trip", ID = 2 });
+        accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 0 });
+        accountBookList.Add(new AccountBook { AccountBookName = "Trip", ID = 1 });
 
         if (accountBookList.Count == 0)
         {
-            accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 1 });
+            accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 0 });
             // add default account book to database
         }
 
         return accountBookList;
     }
 
+    // todo
     public AccountBook GetAccountBook(int id)
     {
-        return accountBookList[id-1];
+        return accountBookList[id];
     }
+
+    //public async Task<AccountBook> GetAccountBookAsync(int id)
+    //{
+    //    await Init();
+    //    return await Database.Table<TodoItem>().Where(i => i.ID == id).FirstOrDefaultAsync();
+    //}
 
     public void GetRecordTypeLists(List<string> expensesTypeList, List<string> incomeTypeList)
     {
@@ -75,12 +99,17 @@ public class RecordService
         }
     }
 
-    public async Task<int> SaveRecordAsync(Record record)
+    public async Task<int> AddRecordAsync(Record record)
     {
-        return await recordDatabase.SaveRecordAsync(record);
+        return await recordDatabase.InsertRecordAsync(record);
     }
 
-    public async Task DeleteRecordByIdAsync(int id)
+    public async Task<int> EditRecordAsync(Record record)
+    {
+        return await recordDatabase.UpdateRecordAsync(record);
+    }
+
+    public async Task DeleteRecordByIdAsync(Guid id)
     {
         try
         {

@@ -12,5 +12,5 @@ public class AccountBook
     public string AccountBookName { get; set; }
 
     //[OneToMany]
-    public List<Record> Records { get; set; }
+    //public List<Record.ID> Records { get; set; }
 }

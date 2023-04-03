@@ -75,19 +75,6 @@ public partial class AddViewModel : BaseViewModel
         }
     }
 
-    //public void GetRecordTypeStrList(bool isExpenses, List<string> recordTypeStrList)
-    //{
-    //    var response = recordService.GetRecordTypeList(isExpenses);
-    //    if (response?.Count > 0)
-    //    {
-    //        foreach (var type in response)
-    //        {
-    //            string typeStr = Record.RecordTypeToString(type);
-    //            recordTypeStrList.Add(typeStr);
-    //        }
-    //    }
-    //}
-
     [RelayCommand]
     async Task AddAsync()
     {
@@ -104,7 +91,7 @@ public partial class AddViewModel : BaseViewModel
             accountBookID = Helper.global_account_book_id;
         else
             accountBookID = Int32.Parse(accountBookIDStr);
-        if (amount == null)
+        if (amount  < 0)
             await Shell.Current.DisplayAlert("Wrong Input", "Please enter the amount", "OK");
 
         if (radioSelectionValue == "Expenses")
@@ -123,8 +110,10 @@ public partial class AddViewModel : BaseViewModel
         type = Regex.Replace(camelCase, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
 
         // add the record to database
+        Guid guid = Guid.NewGuid();
         Record newRecord = new Record
         {
+            ID = guid,
             Type = type,
             ExpensesType = expensesType,
             IncomeType = incomeType,
@@ -135,7 +124,7 @@ public partial class AddViewModel : BaseViewModel
             AccountBookID = accountBookID
         };
 
-        int res = await recordService.SaveRecordAsync(newRecord);
+        int res = await recordService.AddRecordAsync(newRecord);
 
         if (res <= 0)
             await Shell.Current.DisplayAlert("Fail", "Something went wrong while adding record", "OK");
