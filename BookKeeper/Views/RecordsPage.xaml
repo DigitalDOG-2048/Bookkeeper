@@ -6,71 +6,77 @@
              x:DataType="viewmodels:RecordsViewModel"
              x:Class="BookKeeper.Views.RecordsPage"
              Title="{Binding Title}">
-    <ScrollView>
-        <Grid RowDefinitions="Auto, Auto, *"
-              ColumnDefinitions=".7*, .3*"
-              Padding="20,10"
-              RowSpacing="10">
+    
+    <Grid RowDefinitions="Auto, Auto, *"
+          ColumnDefinitions=".7*, .3*"
+          Padding="20,10"
+          RowSpacing="10">
 
-            <Picker VerticalOptions="Center"
-                    ItemsSource="{Binding AccountBookList}"
-                    ItemDisplayBinding="{Binding AccountBookName}"
-                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
-                    Grid.ColumnSpan="2"/>
+        <Picker VerticalOptions="Center"
+                ItemsSource="{Binding AccountBookList}"
+                ItemDisplayBinding="{Binding AccountBookName}"
+                SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                Grid.ColumnSpan="2"/>
 
-            <ImageButton Source="calendar.png"
-                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=PopupCalendarCommand}"
-                         Grid.Row="1"
-                         HeightRequest="30"
-                         HorizontalOptions="Start"/>
-            <Button Text="+ Add"
-                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    HorizontalOptions="End"/>
+        <ImageButton Source="calendar.png"
+                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=PopupCalendarCommand}"
+                     Grid.Row="1"
+                     HeightRequest="35"
+                     WidthRequest="50"
+                     HorizontalOptions="Start"/>
+        <Button Text="+ Add"
+                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalOptions="End"/>
+        <!--<ImageButton Source="plus_square.png"
+                     Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToAddCommand}"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     HorizontalOptions="End"/>-->
 
-            <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
-                            ItemsSource="{Binding Records}"
-                            SelectionMode="None"
-                            EmptyView="No Record">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Record">
-                            <SwipeView>
-                                <SwipeView.RightItems>
-                                    <SwipeItems>
-                                        <SwipeItem Text="Delete"
-                                                    BackgroundColor="Red"
-                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=DeleteCommand}"
-                                                    CommandParameter="{Binding .}"/>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
-
-                                <Grid Padding="5,5">
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToDetailCommand}"
+        <CollectionView Grid.Row="2" Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Records}"
+                        SelectionMode="None"
+                        EmptyView="No Record">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Record">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                                BackgroundColor="Red"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=DeleteCommand}"
                                                 CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
-                                    <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{Binding Type}" Style="{StaticResource NormalLabel}"/>
-                                        <Label Text="{Binding Remarks}" Style="{StaticResource SmallLabel}"/>
-                                    </VerticalStackLayout>
-                                    <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{Binding Amount, StringFormat='{0:N2}'}" Style="{StaticResource NormalLabel}" HorizontalOptions="End"/>
-                                        <Label Text="{Binding DateTime, StringFormat='{0:dd MMM yyyy}'}" Style="{StaticResource SmallLabel}" HorizontalOptions="End"/>
-                                    </VerticalStackLayout>
+                            <Grid Padding="5,5">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=GoToDetailCommand}"
+                                            CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
 
-                                    <BoxView HeightRequest="1" Color="LightGray" VerticalOptions="End"/>
-                                </Grid>
-                            </SwipeView>
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Type}" Style="{StaticResource NormalLabel}"/>
+                                    <Label Text="{Binding Remarks}" Style="{StaticResource SmallLabel}"/>
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Padding="10" Spacing="2" VerticalOptions="Center">
+                                    <Label Text="{Binding Amount}" Style="{StaticResource NormalLabel}" HorizontalOptions="End"/>
+                                    <Label Text="{Binding DateTime, StringFormat='{0:dd MMM yyyy}'}" Style="{StaticResource SmallLabel}" HorizontalOptions="End"/>
+                                </VerticalStackLayout>
 
-                    </DataTemplate>
+                                <BoxView HeightRequest="1" Color="LightGray" VerticalOptions="End"/>
+                            </Grid>
+                        </SwipeView>
 
-                </CollectionView.ItemTemplate>
+                </DataTemplate>
 
-            </CollectionView>
-        </Grid>
-    </ScrollView>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+    </Grid>
+
 </ContentPage>
 

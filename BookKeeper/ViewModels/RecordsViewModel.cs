@@ -7,9 +7,11 @@ using System;
 namespace BookKeeper.ViewModels;
 
 [QueryProperty("CalendarDateRange", "CalendarDateRange")]
+//[QueryProperty("RecordId", "RecordId")]
 public partial class RecordsViewModel : BaseViewModel
 {
     RecordService recordService;
+    //IPopupNavigation popupNavigation;
 
     public ObservableCollection<Record> Records { get; set; } = new();
     public ObservableCollection<AccountBook> AccountBookList { get; set; } = new();
@@ -18,6 +20,9 @@ public partial class RecordsViewModel : BaseViewModel
     {
         Title = "Records";
         this.recordService = recordService;
+        //this.popupNavigation = popupNavigation;
+        // todo
+        //this.accountBook = new AccountBook { AccountBookName = "Personal", ID = 1 };
 
         GetAccountBookList();
         GetRecordsAsync();
@@ -37,8 +42,18 @@ public partial class RecordsViewModel : BaseViewModel
 
     partial void OnSelectedIndexChanged(int value)
     {
-        Helper.global_account_book_id = SelectedIndex;
+        Helper.global_account_book_id = selectedIndex;
     }
+
+    //partial void OnRecordIdChanged(int value)
+    //{
+    //    GetRecordsAsync();
+    //}
+
+    //partial void OnCalendarDateRangeChanged(CalendarDateRange value)
+    //{
+    //    GetRecordsAsync();
+    //}
 
     async void GetAccountBookList()
     {
@@ -53,6 +68,9 @@ public partial class RecordsViewModel : BaseViewModel
     [RelayCommand]
     async Task PopupCalendarAsync()
     {
+        //var result = await Shell.Current.ShowPopupAsync(new CalendarPopup(popupResult));
+        //await Shell.Current.DisplayAlert("Result", $"Result: {result}", "OK");
+        //await popupNavigation.PushAsync(new CalendarPopup());
         await Shell.Current.GoToAsync($"{nameof(CalendarPopup)}", true);
     }
 
@@ -70,6 +88,7 @@ public partial class RecordsViewModel : BaseViewModel
         if (record == null)
             return;
 
+        this.recordId = record.ID;
         await Shell.Current.GoToAsync($"{nameof(DetailPage)}", true,
             new Dictionary<string, object>
             {

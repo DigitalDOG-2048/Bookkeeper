@@ -8,16 +8,12 @@
 
     <TabBar>
        <Tab Title="Records"
-            Icon="doc.png">
+            Icon="records.png">
            <ShellContent ContentTemplate="{DataTemplate views:RecordsPage}" />
        </Tab>
        <Tab Title="Add"
             Icon="plus.png">
            <ShellContent ContentTemplate="{DataTemplate views:AddPage}" />
-       </Tab>
-        <Tab Title="Search"
-            Icon="search_doc.png">
-           <ShellContent ContentTemplate="{DataTemplate views:SearchPage}" />
        </Tab>
        <Tab Title="Summary"
             Icon="calendar.png">
