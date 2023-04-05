@@ -3,29 +3,34 @@ using CommunityToolkit.Mvvm.Input;
 namespace BookKeeper.ViewModels;
 
 [QueryProperty("Record", "Record")]
+[QueryProperty("AccountBookName", "AccountBookName")]
 public partial class RecordDetailViewModel : BaseViewModel
 {
     RecordService recordService;
+    AccountBookService accountBookService;
 
-    public RecordDetailViewModel(RecordService recordService)
+    public RecordDetailViewModel(RecordService recordService, AccountBookService accountBookService)
 	{
         Title = "Record Detail";
 
         this.recordService = recordService;
+        this.accountBookService = accountBookService;
     }
 
 	[ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AccountBookName))]
     Record record;
 
-    public string AccountBookName => recordService.GetAccountBook(record.AccountBookID).AccountBookName;
+    [ObservableProperty]
+    string accountBookName;
 
     [RelayCommand]
     async Task EditAsync()
     {
-        // todo
-
-        //SaveRecordAsync
+        await Shell.Current.GoToAsync($"{nameof(EditPage)}", false,
+            new Dictionary<string, object>
+            {
+                {"Record", record}
+            });
     }
 
     [RelayCommand]
@@ -39,7 +44,7 @@ public partial class RecordDetailViewModel : BaseViewModel
 
         if (answer)
         {
-            await recordService.DeleteRecordByIdAsync(record.ID);
+            await recordService.DeleteRecordByIDAsync(record.ID);
 
             await Shell.Current.GoToAsync("..", true);
         }

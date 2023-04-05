@@ -13,9 +13,10 @@
               RowSpacing="10">
 
             <Picker VerticalOptions="Center"
+                    Title="Select Account Book"
                     ItemsSource="{Binding AccountBookList}"
                     ItemDisplayBinding="{Binding AccountBookName}"
-                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"/>
+                    SelectedIndex="{Binding AccountBookID, Mode=TwoWay}"/>
             
             <Picker VerticalOptions="End"
                     ItemsSource="{Binding YearList}"
@@ -32,7 +33,7 @@
                     Grid.Row="1"
                    WidthRequest="300"/>
             <ImageButton Source="search.png"
-                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecordsViewModel}}, Path=SearchCommand}"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchViewModel}}, Path=SearchCommand}"
                          HeightRequest="30"
                          VerticalOptions="Center"
                          HorizontalOptions="End"

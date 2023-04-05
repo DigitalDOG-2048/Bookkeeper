@@ -1,21 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:BookKeeper.Models"
+             xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
+             x:DataType="viewmodels:SummaryViewModel"
              x:Class="BookKeeper.Views.SummaryPage"
              Title="Summary">
-    <VerticalStackLayout Padding="10">
-        <Frame Margin="0, 10">
-            <Grid RowDefinitions="Auto, Auto, Auto"
-                  ColumnDefinitions=".6*, .4*">
-                <Label Text="Total Balance" Style="{StaticResource TitleLabel}" Padding="0,10"/>
-                <Label Text="'{Amount}'" Style="{StaticResource TitleLabel}" Grid.Column="1" HorizontalOptions="End" Padding="0,10"/>
+    <ScrollView>
+        <VerticalStackLayout Padding="20">
+        
+            <Picker VerticalOptions="End"
+                    ItemsSource="{Binding YearList}"
+                    ItemDisplayBinding="{Binding .}"
+                    SelectedItem="{Binding Year, Mode=TwoWay}"
+                    HorizontalOptions="End"/>
 
-                <Label Text="Expenses" Grid.Row="1"/>
-                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="1" Grid.Column="1" HorizontalOptions="End" />
-                <Label Text="Income" Grid.Row="2"/>
-                <Label Text="'{Amount}'" Style="{StaticResource NormalLabel}" Grid.Row="2" Grid.Column="1" HorizontalOptions="End" />
-            </Grid>
-        </Frame>
+            <Frame Margin="0,10">
+                <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="Auto, *, *">
 
-    </VerticalStackLayout>
+                    <Label Text="Year Balance" Style="{StaticResource NormalLabel}"/>
+                    <Label Text="{Binding YearBalance.BalanceAmount, Mode=TwoWay, StringFormat ='{0:N2}'}" Style="{StaticResource NormalLabel}"
+                           Grid.Column="1" Grid.ColumnSpan="2"
+                           HorizontalOptions="End" Padding="0,10"/>
+
+                    <Label Text="Expenses" Grid.Row="1" Style="{StaticResource SmallLabel}"/>
+                    <ProgressBar Progress="{Binding ExpensesPercentage}"
+                                 Grid.Row="1" Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"/>
+                    <Label Text="{Binding YearBalance.ExpensesAmount, StringFormat='{0:N2}'}" Grid.Row="1" Grid.Column="2" HorizontalOptions="End" />
+
+                    <Label Text="Income" Grid.Row="2" Style="{StaticResource SmallLabel}"/>
+                    <ProgressBar Progress="{Binding IncomePercentage}"
+                                 Grid.Row="2" Grid.Column="1"
+                                 HorizontalOptions="FillAndExpand"/>
+                    <Label Text="{Binding YearBalance.IncomeAmount, StringFormat='{0:N2}'}" Grid.Row="2" Grid.Column="2" HorizontalOptions="End"/>
+
+                </Grid>
+            </Frame>
+
+            <Frame Margin="0,10" Padding="0">
+                <CollectionView ItemsSource="{Binding BalanceList}"
+                                SelectionMode="None"
+                                EmptyView="No Data">
+                    <CollectionView.Header>
+                        <Grid ColumnDefinitions="2*,3*,3*,3*" Padding="0,10" BackgroundColor="{StaticResource Secondary}">
+                            <Label Text="Month" FontAttributes="Bold" Grid.Column="0" HorizontalOptions="Center"/>
+                            <Label Text="Expenses" FontAttributes="Bold" Grid.Column="1" HorizontalOptions="Center"/>
+                            <Label Text="Income" FontAttributes="Bold" Grid.Column="2" HorizontalOptions="Center"/>
+                            <Label Text="Balance" FontAttributes="Bold" Grid.Column="3" HorizontalOptions="Center"/>
+                        </Grid>
+                    </CollectionView.Header>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Balance">
+                                <Grid ColumnDefinitions="2*, 3*, 3*, 3*" Padding="0,10" RowSpacing="2">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SummaryViewModel}}, Path=GoToMonthRecordsCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+                                    <BoxView HeightRequest="1" Color="LightGray" Grid.ColumnSpan="4" VerticalOptions="Start" Margin="-10"/>
+                                    <Label Text="{Binding Month}" Padding="10,0" HorizontalOptions="Center"/>
+                                    <Label Text="{Binding ExpensesAmount, StringFormat='{0:N2}'}" Grid.Column="1" HorizontalOptions="Center"/>
+                                    <Label Text="{Binding IncomeAmount, StringFormat='{0:N2}'}" Grid.Column="2" HorizontalOptions="Center"/>
+                                    <Label Text="{Binding BalanceAmount, StringFormat='{0:N2}'}" Grid.Column="3" HorizontalOptions="Center"/>
+                                </Grid>
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>

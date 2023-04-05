@@ -1,63 +1,49 @@
 ﻿using CommunityToolkit.Maui.Views;
 using BookKeeper.Services;
-using BookKeeper.Views;
 using Syncfusion.Maui.Calendar;
 using System;
 
 namespace BookKeeper.ViewModels;
 
 [QueryProperty("CalendarDateRange", "CalendarDateRange")]
-//[QueryProperty("RecordId", "RecordId")]
 public partial class RecordsViewModel : BaseViewModel
 {
     RecordService recordService;
-    //IPopupNavigation popupNavigation;
+    AccountBookService accountBookService;
 
     public ObservableCollection<Record> Records { get; set; } = new();
     public ObservableCollection<AccountBook> AccountBookList { get; set; } = new();
 
-    public RecordsViewModel(RecordService recordService)
+    public RecordsViewModel(RecordService recordService, AccountBookService accountBookService)
     {
         Title = "Records";
         this.recordService = recordService;
-        //this.popupNavigation = popupNavigation;
-        // todo
-        //this.accountBook = new AccountBook { AccountBookName = "Personal", ID = 1 };
-
-        GetAccountBookList();
-        GetRecordsAsync();
+        this.accountBookService = accountBookService;
     }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AccountBookID))]
-    int selectedIndex = 0;
+    int accountBookID = -1;
 
     [ObservableProperty]
     int recordId;
 
     [ObservableProperty]
     CalendarDateRange calendarDateRange;
-    
-    public int AccountBookID => SelectedIndex + 1;
 
-    partial void OnSelectedIndexChanged(int value)
+    partial void OnAccountBookIDChanged(int value)
     {
-        Helper.global_account_book_id = selectedIndex;
+        GetRecordsAsync();
     }
 
-    //partial void OnRecordIdChanged(int value)
-    //{
-    //    GetRecordsAsync();
-    //}
-
-    //partial void OnCalendarDateRangeChanged(CalendarDateRange value)
-    //{
-    //    GetRecordsAsync();
-    //}
-
-    async void GetAccountBookList()
+    [RelayCommand]
+    async Task GetAccountBookListAsync()
     {
-        var response = await recordService.GetAccountBookList();
+        if (AccountBookList.Count > 0)
+        {
+            AccountBookList.Clear();
+        }
+
+        var response = await accountBookService.GetAccountBookListAsync();
         if (response?.Count > 0)
         {
             foreach (var item in response)
@@ -68,15 +54,18 @@ public partial class RecordsViewModel : BaseViewModel
     [RelayCommand]
     async Task PopupCalendarAsync()
     {
-        //var result = await Shell.Current.ShowPopupAsync(new CalendarPopup(popupResult));
-        //await Shell.Current.DisplayAlert("Result", $"Result: {result}", "OK");
-        //await popupNavigation.PushAsync(new CalendarPopup());
-        await Shell.Current.GoToAsync($"{nameof(CalendarPopup)}", true);
+        await Shell.Current.GoToAsync($"{nameof(CalendarPopup)}", false);
     }
 
     [RelayCommand]
     async Task GoToAddAsync()
     {
+        if (AccountBookID == -1)
+        {
+            showErrorAlert("Please select an account book first!");
+            return;
+        }
+
         await Shell.Current.GoToAsync($"{nameof(AddPage)}?AccountBookID={AccountBookID}", false);
 
         await GetRecordsAsync();
@@ -88,11 +77,19 @@ public partial class RecordsViewModel : BaseViewModel
         if (record == null)
             return;
 
-        this.recordId = record.ID;
+        if (AccountBookID == -1)
+        {
+            showErrorAlert("Please select an account book first!");
+            return;
+        }
+
+        AccountBook accountBook = await accountBookService.GetAccountBookAsync(AccountBookID);
+
         await Shell.Current.GoToAsync($"{nameof(DetailPage)}", true,
             new Dictionary<string, object>
             {
-                {"Record", record}
+                { "Record", record },
+                { "AccountBookName", AccountBookList[AccountBookID].AccountBookName }
             });
     }
 
@@ -105,7 +102,7 @@ public partial class RecordsViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            List<Record> response = await recordService.GetRecordsByDateRangeAsync(calendarDateRange);
+            List<Record> response = await recordService.GetRecordsByDateRangeAsync(calendarDateRange, AccountBookID);
 
             if (Records.Count != 0)
                 Records.Clear();
@@ -125,7 +122,7 @@ public partial class RecordsViewModel : BaseViewModel
 	}
 
     [RelayCommand]
-    async Task Delete(Record record)
+    async Task DeleteAsync(Record record)
     {
         if (Records.Contains(record))
         {
@@ -133,7 +130,16 @@ public partial class RecordsViewModel : BaseViewModel
         }
 
         // delete the record from database
-        await recordService.DeleteRecordByIdAsync(record.ID);
+        try
+        {
+            int res = await recordService.DeleteRecordByIDAsync(record.ID);
+            if (res == -1)
+                await Shell.Current.DisplayAlert("Error", "Failed to delete in database", "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
     }
 }
 

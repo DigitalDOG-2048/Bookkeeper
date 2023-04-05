@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
+             xmlns:models="clr-namespace:BookKeeper.Models"
+             x:Class="BookKeeper.Views.AccountPage"
+             x:DataType="viewmodels:AccountViewModel"
+             Title="BookKeeper">
+    <ScrollView>
+        <Grid RowDefinitions="Auto, *"
+              ColumnDefinitions="7*, 3*"
+              Padding="20,10"
+              RowSpacing="10">
+
+            <Label Text="My Account Books" Style="{StaticResource TitleLabel}" VerticalOptions="Center"/>
+            <Button Text="+ Add"
+                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:AccountViewModel}}, Path=GoToAddCommand}"
+                    Grid.Column="1"
+                    HorizontalOptions="End"/>
+
+            <CollectionView x:Name="collectionView"
+                            Grid.Row="1" Grid.ColumnSpan="2"
+                            ItemsSource="{Binding AccountBookList}"
+                            SelectionMode="None"
+                            EmptyView="No Data">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:AccountBook">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Delete"
+                                                    BackgroundColor="Red"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:AccountViewModel}}, Path=DeleteCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                        
+                                        <SwipeItem Text="Edit"
+                                                    BackgroundColor="{StaticResource Primary}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:AccountViewModel}}, Path=EditCommand}"
+                                                    CommandParameter="{Binding .}"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Grid Padding="20">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:AccountViewModel}}, Path=GoToRecordsCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                    </Grid.GestureRecognizers>
+
+                                    <Label Text="{Binding AccountBookName}" Style="{StaticResource NormalLabel}" HorizontalOptions="Center"/>
+                                    <BoxView HeightRequest="1" Color="LightGray" VerticalOptions="End" Margin="-10"/>
+                                </Grid>
+                            </SwipeView>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+        </Grid>
+    </ScrollView>
+</ContentPage>

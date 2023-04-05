@@ -14,6 +14,11 @@ public partial class BaseViewModel : ObservableObject
     string title;
 
     public bool IsNotBusy => !IsBusy;
+
+    public static void showErrorAlert(string msg)
+    {
+        Shell.Current.DisplayAlert("Reminder", msg, "OK");
+    }
 }
 
 

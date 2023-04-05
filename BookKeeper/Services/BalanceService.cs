@@ -13,7 +13,7 @@ public class BalanceService
 	{
     }
 
-    public async Task<List<Balance>> GetBalanceList(int year)
+    public async Task<List<Balance>> GetBalanceList(int year, int accountBookID)
 	{
 		if (balanceList.Count > 0)
 			balanceList.Clear();
@@ -23,7 +23,7 @@ public class BalanceService
 			DateTime firstDayOfMonth = new DateTime(year, month, 1);
 			DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
-			List<Record> monthRecords = await recordDatabase.GetRecordsByDateRangeAsync(firstDayOfMonth, lastDayOfMonth);
+			List<Record> monthRecords = await recordDatabase.GetRecordsByDateRangeAsync(firstDayOfMonth, lastDayOfMonth, accountBookID);
 
             decimal monthExpensesAmount = 0;
             decimal monthIncomeAmount = 0;
@@ -48,9 +48,9 @@ public class BalanceService
 		return balanceList;
 	}
 
-    public Task<List<Balance>> GetBalanceList(string year)
+    public Task<List<Balance>> GetBalanceList(string year, int accountBookID)
 	{
-		return GetBalanceList(Int32.Parse(year));
+		return GetBalanceList(Int32.Parse(year), accountBookID);
 	}
 
 	public Balance GetYearBalance(string year, ObservableCollection<Balance> monthBalanceList)

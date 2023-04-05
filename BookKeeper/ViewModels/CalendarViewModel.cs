@@ -14,7 +14,7 @@ public partial class CalendarViewModel : BaseViewModel
     [RelayCommand]
     async Task SelectAsync()
     {
-        await Shell.Current.GoToAsync("..", true,
+        await Shell.Current.GoToAsync("..", false,
             new Dictionary<string, object>
             {
                 {"CalendarDateRange", selectedDateRange}
@@ -27,7 +27,7 @@ public partial class CalendarViewModel : BaseViewModel
     {
         //await _popupNavigation.PopAsync();
 
-        await Shell.Current.GoToAsync("..", true);
+        await Shell.Current.GoToAsync("..", false);
     }
 }
 

@@ -1,10 +1,21 @@
-﻿namespace BookKeeper.Views;
+﻿using AndroidX.Lifecycle;
+
+namespace BookKeeper.Views;
 
 public partial class SearchPage : ContentPage
 {
-	public SearchPage(SearchViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+    private SearchViewModel _viewModel;
+
+    public SearchPage(SearchViewModel viewModel)
+    {
+        InitializeComponent();
+        _viewModel = viewModel;
+        BindingContext = viewModel;
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        _viewModel.GetAccountBookListCommand.Execute(null);
+    }
 }

@@ -10,7 +10,4 @@ public class AccountBook
 
     [MaxLength(250), Unique]
     public string AccountBookName { get; set; }
-
-    //[OneToMany]
-    public List<Record> Records { get; set; }
 }

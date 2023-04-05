@@ -13,40 +13,81 @@ namespace BookKeeper.Data
 
             database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
 
-            // for testing
-            await database.DropTableAsync<Record>();
-
             await database.CreateTableAsync<Record>();
         }
 
-        public async Task<List<Record>> GetRecordsByDateRangeAsync(DateTime startDate, DateTime endDate)
+        public async Task<List<Record>> GetRecordsByDateRangeAsync(DateTime startDate, DateTime endDate, int accountBookID)
         {
             await Init();
 
-            // todo
-            List<Record> records = await database.Table<Record>().ToListAsync();
-            //return await database.QueryAsync<Record>("SELECT * FROM [Record] WHERE ...");
-
-            return records;
-        }
-
-        public async Task<int> SaveRecordAsync(Record record)
-        {
-            await Init();
-
-            if (record.ID != 0)
+            if (accountBookID < 0)
             {
-                // Update an existing record
-                return await database.UpdateAsync(record);
+                object[] queryArgs = { startDate, endDate };
+                return await database.QueryAsync<Record>(
+                    "SELECT * FROM Records WHERE DateTime BETWEEN ? AND ? ORDER BY DateTime DESC",
+                    queryArgs);
             }
             else
             {
-                // Save a new record
-                return await database.InsertAsync(record);
+                object[] queryArgs = { accountBookID, startDate, endDate };
+                return await database.QueryAsync<Record>(
+                        "SELECT * FROM Records WHERE AccountBookID == ? AND DateTime BETWEEN ? AND ? ORDER BY DateTime DESC",
+                        queryArgs);
             }
         }
 
-        public async Task<int> DeleteRecordAsync(int id)
+        public async Task<List<Record>> GetRecordsByKeywords(DateTime startDate, DateTime endDate, List<string> keywords, int accountBookID)
+        {
+            await Init();
+
+            List<object> queryArgs = new();
+            queryArgs.Add(startDate);
+            queryArgs.Add(endDate);
+
+            if (accountBookID < 0)
+            {
+                string commandText = "SELECT * FROM Records WHERE DateTime BETWEEN ? AND ? AND (1=0";
+                foreach (string keyword in keywords)
+                {
+                    string likeKeyword = "%" + keyword + "%";
+                    commandText += " OR Type LIKE ? OR Remarks LIKE ?";
+                    queryArgs.Add(likeKeyword);
+                    queryArgs.Add(likeKeyword);
+                }
+                commandText += ") ORDER BY DateTime DESC";
+                return await database.QueryAsync<Record>(commandText, queryArgs.ToArray());
+            }
+            else
+            {
+                string commandText = "SELECT * FROM Records WHERE DateTime BETWEEN ? AND ? AND AccountBookID == ? AND (1=0";
+                queryArgs.Add(accountBookID);
+                foreach (string keyword in keywords)
+                {
+                    string likeKeyword = "%" + keyword + "%";
+                    commandText += " OR Type LIKE ? OR Remarks LIKE ?";
+                    queryArgs.Add(likeKeyword);
+                    queryArgs.Add(likeKeyword);
+                }
+                commandText += ") ORDER BY DateTime DESC";
+                return await database.QueryAsync<Record>(commandText, queryArgs.ToArray());
+            }
+        }
+
+        public async Task<int> UpdateRecordAsync(Record record)
+        {
+            await Init();
+
+            return await database.UpdateAsync(record);
+        }
+
+        public async Task<int> InsertRecordAsync(Record record)
+        {
+            await Init();
+
+            return await database.InsertAsync(record);
+        }
+
+        public async Task<int> DeleteRecordAsync(Guid id)
         {
             await Init();
 

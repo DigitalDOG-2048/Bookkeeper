@@ -2,6 +2,7 @@
 global using CommunityToolkit.Mvvm.Input;
 global using BookKeeper.Models;
 global using BookKeeper.ViewModels;
+global using BookKeeper.Views;
 global using System.Collections.ObjectModel;
 global using System.ComponentModel;
 global using System.Diagnostics;

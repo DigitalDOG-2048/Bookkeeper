@@ -8,19 +8,17 @@ namespace BookKeeper.Services;
 
 public class RecordService
 {
-    List<AccountBook> accountBookList = new();
-
     RecordDatabase recordDatabase = App.RecordDatabase;
 
-    public async Task<List<Record>> GetRecordsByDateRangeAsync(CalendarDateRange calendarDateRange)
+    public async Task<List<Record>> GetRecordsByDateRangeAsync(CalendarDateRange calendarDateRange, int accountBookID)
     {
         DateTime startDate, endDate;
 
         if (calendarDateRange == null)
         {
             DateTime now = DateTime.Now;
-            startDate = new DateTime(now.Year, now.Month, 1);
-            endDate = startDate.AddMonths(1).AddDays(-1);
+            startDate = new DateTime(now.Year, 1, 1);
+            endDate = new DateTime(now.Year, 12, 30);
         }
         else
         {
@@ -28,30 +26,24 @@ public class RecordService
             endDate = (DateTime)calendarDateRange.EndDate;
         }
 
-        return await recordDatabase.GetRecordsByDateRangeAsync(startDate, endDate);
+        return await recordDatabase.GetRecordsByDateRangeAsync(startDate, endDate, accountBookID);
     }
 
-    public async Task<List<AccountBook>> GetAccountBookList()
+    public async Task<List<Record>> GetYearRecordsByKeywordAsync(int year, string keyword, int accountBookID)
     {
-        if (accountBookList?.Count > 0)
-            return accountBookList;
+        if (!Constants.YearRange.Contains(year))
+            year = DateTime.Now.Year;
 
-        // get account books from database
-        accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 1 });
-        accountBookList.Add(new AccountBook { AccountBookName = "Trip", ID = 2 });
+        DateTime firstDayOfYear = new DateTime(year, 1, 1);
+        DateTime lastDayOfYear = new DateTime(year, 12, 30);
 
-        if (accountBookList.Count == 0)
+        if (keyword == null || keyword == "")
         {
-            accountBookList.Add(new AccountBook { AccountBookName = "Personal", ID = 1 });
-            // add default account book to database
+            return await recordDatabase.GetRecordsByDateRangeAsync(firstDayOfYear, lastDayOfYear, accountBookID);
         }
 
-        return accountBookList;
-    }
-
-    public AccountBook GetAccountBook(int id)
-    {
-        return accountBookList[id-1];
+        List<string> keywordList = keyword.Split(' ').ToList();
+        return await recordDatabase.GetRecordsByKeywords(firstDayOfYear, lastDayOfYear, keywordList, accountBookID);
     }
 
     public void GetRecordTypeLists(List<string> expensesTypeList, List<string> incomeTypeList)
@@ -75,23 +67,19 @@ public class RecordService
         }
     }
 
-    public async Task<int> SaveRecordAsync(Record record)
+    public async Task<int> AddRecordAsync(Record record)
     {
-        return await recordDatabase.SaveRecordAsync(record);
+        return await recordDatabase.InsertRecordAsync(record);
     }
 
-    public async Task DeleteRecordByIdAsync(int id)
+    public async Task<int> EditRecordAsync(Record record)
     {
-        try
-        {
-            int res = await recordDatabase.DeleteRecordAsync(id);
-            if (res == -1)
-                await Shell.Current.DisplayAlert("Error", "Failed to delete in database", "OK");
-        }
-        catch (Exception ex)
-        {
-            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
-        }
+        return await recordDatabase.UpdateRecordAsync(record);
+    }
+
+    public async Task<int> DeleteRecordByIDAsync(Guid id)
+    {
+        return await recordDatabase.DeleteRecordAsync(id);
     }
 }
 

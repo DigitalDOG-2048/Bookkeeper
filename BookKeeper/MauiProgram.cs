@@ -29,17 +29,28 @@ public static class MauiProgram
         builder.Services.AddTransient<SummaryPage>();
         builder.Services.AddTransient<CalendarPopup>();
         builder.Services.AddTransient<AddPage>();
+        builder.Services.AddTransient<EditPage>();
+        builder.Services.AddTransient<SearchPage>();
+        builder.Services.AddTransient<AccountPage>();
 
         builder.Services.AddSingleton<MainViewModel>();
         builder.Services.AddTransient<RecordsViewModel>();
         builder.Services.AddTransient<RecordDetailViewModel>();
         builder.Services.AddTransient<CalendarViewModel>();
         builder.Services.AddTransient<AddViewModel>();
+        builder.Services.AddTransient<SummaryViewModel>();
+        builder.Services.AddTransient<SearchViewModel>();
+        builder.Services.AddTransient<EditViewModel>();
+        builder.Services.AddTransient<AccountViewModel>();
 
         builder.Services.AddSingleton<RecordService>();
+        builder.Services.AddSingleton<BalanceService>();
+        builder.Services.AddSingleton<AccountBookService>();
 
         builder.Services.AddSingleton<RecordDatabase>(s =>
             ActivatorUtilities.CreateInstance<RecordDatabase>(s));
+        builder.Services.AddSingleton<AccountBookDatabase>(s =>
+            ActivatorUtilities.CreateInstance<AccountBookDatabase>(s));
 
 #endif
 

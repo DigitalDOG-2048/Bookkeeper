@@ -18,5 +18,10 @@ public static class Constants
 
     public const int DefaultExpensesType = 2;
     public const int DefaultIncomeType = 2;
+
+    public const int DefaultAccountID = 0;
+
+    public static IEnumerable<int> MonthRange = Enumerable.Range(1, 12);
+    public static IEnumerable<int> YearRange = Enumerable.Range(DateTime.Now.Year-20, 21);
 }
 

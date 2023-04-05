@@ -21,7 +21,9 @@ public partial class SummaryViewModel : BaseViewModel
 
 	[ObservableProperty]
 	string year = DateTime.Now.Year.ToString();
-    
+
+    [ObservableProperty]
+    int accountBookID;
     [ObservableProperty]
     Balance yearBalance;
     [ObservableProperty]
@@ -56,7 +58,7 @@ partial void OnYearChanged(string value)
     {
 		try
         {
-            List<Balance> response = await balanceService.GetBalanceList(year);
+            List<Balance> response = await balanceService.GetBalanceList(year, accountBookID);
 
             if (BalanceList?.Count > 0)
                 BalanceList.Clear();

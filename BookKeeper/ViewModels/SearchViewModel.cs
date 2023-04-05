@@ -8,18 +8,22 @@ namespace BookKeeper.ViewModels;
 public partial class SearchViewModel : BaseViewModel
 {
     RecordService recordService;
+    AccountBookService accountBookService;
 
     public ObservableCollection<AccountBook> AccountBookList { get; set; } = new();
     public ObservableCollection<Record> Records { get; set; } = new();
     public ObservableCollection<string> YearList { get; set; } = new();
 
-    public SearchViewModel(RecordService recordService)
+    public SearchViewModel(RecordService recordService, AccountBookService accountBookService)
 	{
         this.recordService = recordService;
+        this.accountBookService = accountBookService;
 
-        GetAccountBookList();
         GetYearList();
     }
+
+    [ObservableProperty]
+    int accountBookID = -1;
 
     [ObservableProperty]
     string keyword;
@@ -28,10 +32,7 @@ public partial class SearchViewModel : BaseViewModel
     string year = DateTime.Now.Year.ToString();
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(AccountBookID))]
-    int selectedIndex = 0;
-
-    public int AccountBookID => SelectedIndex + 1;
+    AccountBook accountBook;
 
     public void GetYearList()
     {
@@ -41,9 +42,15 @@ public partial class SearchViewModel : BaseViewModel
         }
     }
 
-    async void GetAccountBookList()
+    [RelayCommand]
+    public async Task GetAccountBookListAsync()
     {
-        var response = await recordService.GetAccountBookList();
+        if (AccountBookList.Count > 0)
+        {
+            AccountBookList.Clear();
+        }
+
+        var response = await accountBookService.GetAccountBookListAsync();
         if (response?.Count > 0)
         {
             foreach (var item in response)
@@ -54,7 +61,7 @@ public partial class SearchViewModel : BaseViewModel
     [RelayCommand]
     public async Task SearchAsync()
     {
-        // todo
+        await GetRecordsAsync(Keyword);
     }
 
     [RelayCommand]
@@ -62,7 +69,7 @@ public partial class SearchViewModel : BaseViewModel
     {
         try
         {
-            List<Record> response = await recordService.GetYearRecordsByKeywordAsync(Int32.Parse(Year), Keyword);
+            List<Record> response = await recordService.GetYearRecordsByKeywordAsync(Int32.Parse(Year), Keyword, AccountBookID);
 
             if (Records.Count != 0)
                 Records.Clear();
@@ -99,7 +106,7 @@ public partial class SearchViewModel : BaseViewModel
         }
 
         // delete the record from database
-        await recordService.DeleteRecordByIdAsync(record.ID);
+        await recordService.DeleteRecordByIDAsync(record.ID);
     }
 }
 

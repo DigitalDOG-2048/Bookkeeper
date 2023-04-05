@@ -7,17 +7,25 @@
     xmlns:views="clr-namespace:BookKeeper.Views">
 
     <TabBar>
-       <Tab Title="Records"
-            Icon="records.png">
+       <Tab x:Name="RecordsPage"
+            Title="Records"
+            Icon="doc.png">
            <ShellContent ContentTemplate="{DataTemplate views:RecordsPage}" />
        </Tab>
-       <Tab Title="Add"
-            Icon="plus.png">
-           <ShellContent ContentTemplate="{DataTemplate views:AddPage}" />
+       <Tab x:Name="SearchPage"
+            Title="Search"
+            Icon="search_doc.png">
+           <ShellContent ContentTemplate="{DataTemplate views:SearchPage}" />
        </Tab>
-       <Tab Title="Summary"
+       <Tab Route="SummaryPage"
+            Title="Summary"
             Icon="calendar.png">
            <ShellContent ContentTemplate="{DataTemplate views:SummaryPage}" />
+       </Tab>
+       <Tab Route="AccountPage"
+            Title="Books"
+            Icon="book.png">
+           <ShellContent ContentTemplate="{DataTemplate views:AccountPage}" />
        </Tab>
     </TabBar>
 
