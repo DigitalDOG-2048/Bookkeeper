@@ -1,1 +1,2 @@
 # 6002CEM-Longhui_10252961
+This app is about the bookkeeper, It allows users to make records of either income or expenses. This app is used to track your daily spending and help you to control your spending by locking back on the record to avoid many any unnecessary spending again. This can also help user to understand their financial situation and helps them to manage their finance. This app includes a multiple-book function, which allows you to spare your finance and your family's finance.
