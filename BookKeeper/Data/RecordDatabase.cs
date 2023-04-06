@@ -16,9 +16,22 @@ namespace BookKeeper.Data
             await database.CreateTableAsync<Record>();
         }
 
+        private DateTime ConvertDate(DateTime dateTime, bool isStart)
+        {
+            if (isStart)
+            {
+                return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0);
+            } else {
+                return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 23, 59, 59);
+            }
+        }
+
         public async Task<List<Record>> GetRecordsByDateRangeAsync(DateTime startDate, DateTime endDate, int accountBookID)
         {
             await Init();
+
+            startDate = ConvertDate(startDate, true);
+            endDate = ConvertDate(endDate, false);
 
             if (accountBookID < 0)
             {
@@ -39,6 +52,9 @@ namespace BookKeeper.Data
         public async Task<List<Record>> GetRecordsByKeywords(DateTime startDate, DateTime endDate, List<string> keywords, int accountBookID)
         {
             await Init();
+
+            startDate = ConvertDate(startDate, true);
+            endDate = ConvertDate(endDate, false);
 
             List<object> queryArgs = new();
             queryArgs.Add(startDate);

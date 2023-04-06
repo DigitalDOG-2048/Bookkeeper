@@ -5,26 +5,24 @@ using BookKeeper.Services;
 namespace BookKeeper.ViewModels;
 
 [QueryProperty("AccountBookID", "AccountBookID")]
-public partial class AddViewModel : BaseViewModel
+public partial class BaseSaveViewModel : BaseViewModel
 {
-    RecordService recordService;
+    public RecordService recordService;
     List<string> expensesTypeStrList = new();
     List<string> incomeTypeStrList = new();
 
     public ObservableCollection<string> RecordTypeStrList { get; set; } = new();
 
-    public AddViewModel(RecordService recordService)
+    public BaseSaveViewModel(RecordService recordService)
     {
         this.recordService = recordService;
 
         dateTime = DateTime.Now;
         recordService.GetRecordTypeLists(expensesTypeStrList, incomeTypeStrList);
         radioSelectionValue = "Expenses";
-
-        Reset();
     }
 
-    private void Reset()
+    public void Reset()
     {
         amount = (decimal)0;
         remarks = "";
@@ -34,20 +32,22 @@ public partial class AddViewModel : BaseViewModel
     }
 
     [ObservableProperty]
-    string remarks;
+    public string remarks;
     [ObservableProperty]
-    decimal amount;
+    public decimal amount;
     [ObservableProperty]
-    DateTime dateTime;
+    public DateTime dateTime;
 
     [ObservableProperty]
-    int accountBookID;
+    public int accountBookID;
 
     public int TypeSelectionIndex => Constants.DefaultExpensesType;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TypeSelectionIndex))]
-    string radioSelectionValue;
+    public string radioSelectionValue;
+
+    //bool isExpenses = true;
 
     partial void OnRadioSelectionValueChanged(string value)
     {
@@ -66,8 +66,7 @@ public partial class AddViewModel : BaseViewModel
         }
     }
 
-    [RelayCommand]
-    async Task AddAsync()
+    public async Task<Record> CreateValidRecord(Guid id)
     {
         bool isExpenses;
         ExpensesType expensesType = (ExpensesType)Constants.DefaultExpensesType;
@@ -78,11 +77,8 @@ public partial class AddViewModel : BaseViewModel
         if (remarks == null)
             remarks = "";
 
-        if (amount <= 0)
-        {
+        if (amount == 0)
             await Shell.Current.DisplayAlert("Wrong Input", "Please enter the amount", "OK");
-            return;
-        }
 
         if (radioSelectionValue == "Expenses")
         {
@@ -99,11 +95,9 @@ public partial class AddViewModel : BaseViewModel
         }
         type = Regex.Replace(camelCase, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
 
-        // add the record to database
-        Guid guid = Guid.NewGuid();
-        Record newRecord = new Record
+        Record record = new Record
         {
-            ID = guid,
+            ID = id,
             Type = type,
             ExpensesType = expensesType,
             IncomeType = incomeType,
@@ -111,22 +105,8 @@ public partial class AddViewModel : BaseViewModel
             Remarks = remarks,
             Amount = amount,
             DateTime = dateTime,
-            AccountBookID = accountBookID
+            AccountBookID = AccountBookID
         };
-
-        int res = await recordService.AddRecordAsync(newRecord);
-
-        if (res <= 0)
-            await Shell.Current.DisplayAlert("Fail", "Something went wrong while adding record", "OK");
-        else
-        {
-            await Shell.Current.DisplayAlert("Success", "Record Added!", "OK");
-
-            await Shell.Current.GoToAsync("..", true,
-                new Dictionary<string, object>
-                {
-                    {"Record", newRecord}
-                });
-        }
+        return record;
     }
 }

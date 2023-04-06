@@ -4,50 +4,70 @@ using BookKeeper.Services;
 
 namespace BookKeeper.ViewModels;
 
-[QueryProperty("AccountBookID", "AccountBookID")]
-public partial class AddViewModel : BaseViewModel
+[QueryProperty("Record", "Record")]
+public partial class EditViewModel : BaseViewModel
 {
+    public ObservableCollection<string> RecordTypeStrList { get; set; } = new();
+
     RecordService recordService;
     List<string> expensesTypeStrList = new();
     List<string> incomeTypeStrList = new();
 
-    public ObservableCollection<string> RecordTypeStrList { get; set; } = new();
-
-    public AddViewModel(RecordService recordService)
+    public EditViewModel(RecordService recordService)
     {
         this.recordService = recordService;
 
         dateTime = DateTime.Now;
         recordService.GetRecordTypeLists(expensesTypeStrList, incomeTypeStrList);
-        radioSelectionValue = "Expenses";
-
-        Reset();
     }
 
-    private void Reset()
+    [ObservableProperty]
+    public string remarks;
+    [ObservableProperty]
+    public decimal amount;
+    [ObservableProperty]
+    public DateTime dateTime;
+
+    [ObservableProperty]
+    public int accountBookID;
+
+    [ObservableProperty]
+    //[NotifyPropertyChangedFor(nameof(TypeSelectionIndex))]
+    public string radioSelectionValue;
+
+    [ObservableProperty]
+    Record record;
+
+    [ObservableProperty]
+    public int typeSelectionIndex;
+
+    partial void OnRecordChanged(Record value)
     {
-        amount = (decimal)0;
-        remarks = "";
-
-        foreach (string type in expensesTypeStrList)
-            RecordTypeStrList.Add(type);
+        Remarks = value.Remarks;
+        Amount = value.Amount;
+        DateTime = value.DateTime;
+        RadioSelectionValue = value.IsExpenses ? "Expenses" : "Income";
     }
 
-    [ObservableProperty]
-    string remarks;
-    [ObservableProperty]
-    decimal amount;
-    [ObservableProperty]
-    DateTime dateTime;
+    [RelayCommand]
+    async Task EditAsync()
+    {
+        Record newRecord = await CreateValidRecord(record.ID);
+        int res = await recordService.EditRecordAsync(newRecord);
 
-    [ObservableProperty]
-    int accountBookID;
+        if (res <= 0)
+            await Shell.Current.DisplayAlert("Fail", "Something went wrong while editing record", "OK");
+        else
+        {
+            await Shell.Current.DisplayAlert("Success", "Record Updated!", "OK");
 
-    public int TypeSelectionIndex => Constants.DefaultExpensesType;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(TypeSelectionIndex))]
-    string radioSelectionValue;
+            await Shell.Current.GoToAsync("..", true,
+                new Dictionary<string, object>
+                {
+                    {"Record", newRecord}
+                });
+        }
+    }
 
     partial void OnRadioSelectionValueChanged(string value)
     {
@@ -58,16 +78,18 @@ public partial class AddViewModel : BaseViewModel
         {
             foreach (string type in expensesTypeStrList)
                 RecordTypeStrList.Add(type);
+            TypeSelectionIndex = (int)record.ExpensesType;
         }
         else
         {
             foreach (string type in incomeTypeStrList)
                 RecordTypeStrList.Add(type);
+            TypeSelectionIndex = (int)record.IncomeType;
         }
+
     }
 
-    [RelayCommand]
-    async Task AddAsync()
+    public async Task<Record> CreateValidRecord(Guid id)
     {
         bool isExpenses;
         ExpensesType expensesType = (ExpensesType)Constants.DefaultExpensesType;
@@ -78,11 +100,8 @@ public partial class AddViewModel : BaseViewModel
         if (remarks == null)
             remarks = "";
 
-        if (amount <= 0)
-        {
+        if (amount == 0)
             await Shell.Current.DisplayAlert("Wrong Input", "Please enter the amount", "OK");
-            return;
-        }
 
         if (radioSelectionValue == "Expenses")
         {
@@ -99,11 +118,9 @@ public partial class AddViewModel : BaseViewModel
         }
         type = Regex.Replace(camelCase, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
 
-        // add the record to database
-        Guid guid = Guid.NewGuid();
-        Record newRecord = new Record
+        Record record = new Record
         {
-            ID = guid,
+            ID = id,
             Type = type,
             ExpensesType = expensesType,
             IncomeType = incomeType,
@@ -111,22 +128,9 @@ public partial class AddViewModel : BaseViewModel
             Remarks = remarks,
             Amount = amount,
             DateTime = dateTime,
-            AccountBookID = accountBookID
+            AccountBookID = AccountBookID
         };
-
-        int res = await recordService.AddRecordAsync(newRecord);
-
-        if (res <= 0)
-            await Shell.Current.DisplayAlert("Fail", "Something went wrong while adding record", "OK");
-        else
-        {
-            await Shell.Current.DisplayAlert("Success", "Record Added!", "OK");
-
-            await Shell.Current.GoToAsync("..", true,
-                new Dictionary<string, object>
-                {
-                    {"Record", newRecord}
-                });
-        }
+        return record;
     }
 }
+

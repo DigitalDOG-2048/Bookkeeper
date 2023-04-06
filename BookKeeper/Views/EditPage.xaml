@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodels="clr-namespace:BookKeeper.ViewModels"
+             x:DataType="viewmodels:EditViewModel"
+             x:Class="BookKeeper.Views.EditPage"
+             Title="EditPage">
+
+    <Frame Margin="10">
+        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"
+              ColumnDefinitions=".4*, .6*"
+              Padding="20">
+            <StackLayout RadioButtonGroup.GroupName="selection"
+                         RadioButtonGroup.SelectedValue="{Binding RadioSelectionValue}">
+                <RadioButton Content="Expenses"
+                             Value="Expenses"/>
+                <RadioButton Content="Income" Grid.Column="1"
+                             Value="Income"/>
+            </StackLayout>
+
+            <Label Text="Type" Grid.Row="1" VerticalOptions="Center"/>
+            <Picker Grid.Row="1" Grid.Column="1"
+                    Title="Select Type"
+                    VerticalOptions="Center"
+                    ItemsSource="{Binding RecordTypeStrList}"
+                    ItemDisplayBinding="{Binding .}"
+                    SelectedIndex="{Binding TypeSelectionIndex, Mode=TwoWay}"
+                    Grid.ColumnSpan="2"/>
+
+            <Label Text="Date" Grid.Row="2" VerticalOptions="Center"/>
+            <DatePicker Grid.Row="2" Grid.Column="1" Date="{Binding DateTime}"/>
+
+            <Label Text="Remarks" Grid.Row="3" VerticalOptions="Center"/>
+            <Entry x:Name="RemarksEntry" Grid.Row="3" Grid.Column="1" VerticalOptions="Center"
+                   Text="{Binding Remarks}"
+                   Keyboard="Text" ReturnType="Done"/>
+
+            <Label Text="Amount" Grid.Row="4" VerticalOptions="Center"/>
+                <Entry x:Name="AmountEntry" Grid.Row="4" Grid.Column="1" VerticalOptions="Center"
+                       Text="{Binding Amount}"
+                       Keyboard="Numeric" ReturnType="Done">
+                    <Entry.Behaviors>
+                        <toolkit:NumericValidationBehavior
+                            Flags="ValidateOnValueChanged"
+                            MinimumValue="0.01"
+                            MaximumValue="100000000"
+                            MaximumDecimalPlaces="2"/>
+                    </Entry.Behaviors>
+                </Entry>
+
+            <Button Text="Add" Grid.Row="5" Grid.ColumnSpan="2"
+                    VerticalOptions="Center"
+                    Margin="0, 30"
+                    Command="{Binding EditCommand}"/>
+        </Grid>
+    </Frame>
+
+</ContentPage>
