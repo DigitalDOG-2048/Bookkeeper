@@ -22,6 +22,7 @@ public static class MauiProgram
         });
 
 #if DEBUG
+        // code learned from https://jesseliberty.com/2022/11/01/net-maui-forget-me-not-part-6/
         builder.Logging.AddDebug();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<RecordsPage>();

@@ -5,7 +5,8 @@ namespace BookKeeper.Models;
 
 [Table("Records")]
 public class Record
-{
+{   
+    //sqlite database usage from https://jesseliberty.com/2022/08/01/learning-net-maui-part-15-sqlite/
     [PrimaryKey, AutoIncrement, Column("ID")]
     public Guid ID { get; set; }
 

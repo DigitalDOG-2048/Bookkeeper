@@ -1,4 +1,4 @@
-﻿using System;
+﻿// code learned https://learn.microsoft.com/en-us/dotnet/maui/data-cloud/database-sqlite?view=net-maui-7.0
 using SQLite;
 
 namespace BookKeeper.Data;

@@ -35,6 +35,7 @@ public partial class RecordDetailViewModel : BaseViewModel
 
     [RelayCommand]
     async Task DeleteAsync()
+    // alert message display https://learn.microsoft.com/zh-cn/dotnet/maui/user-interface/pop-ups?view=net-maui-7.0
     {
         bool answer = await Shell.Current.DisplayAlert(
             "Reminder",

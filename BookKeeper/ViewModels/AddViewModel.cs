@@ -80,6 +80,7 @@ public partial class AddViewModel : BaseViewModel
 
         if (amount <= 0)
         {
+            // alert message display https://github.com/dotnet/maui/discussions/3518
             await Shell.Current.DisplayAlert("Wrong Input", "Please enter the amount", "OK");
             return;
         }
@@ -117,6 +118,7 @@ public partial class AddViewModel : BaseViewModel
         int res = await recordService.AddRecordAsync(newRecord);
 
         if (res <= 0)
+            // alert message display https://github.com/dotnet/maui/discussions/3518
             await Shell.Current.DisplayAlert("Fail", "Something went wrong while adding record", "OK");
         else
         {

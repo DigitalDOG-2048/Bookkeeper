@@ -17,6 +17,7 @@ public partial class BaseViewModel : ObservableObject
 
     public static void showErrorAlert(string msg)
     {
+        // alert message display https://github.com/dotnet/maui/discussions/3518
         Shell.Current.DisplayAlert("Reminder", msg, "OK");
     }
 }

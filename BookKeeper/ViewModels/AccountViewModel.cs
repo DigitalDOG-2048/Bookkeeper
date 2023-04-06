@@ -48,9 +48,11 @@ public partial class AccountViewModel : BaseViewModel
             int res = await accountBookService.AddAccountBookAsync(newAccountBook);
 
             if (res <= 0)
+                // alert message display https://github.com/dotnet/maui/discussions/3518
                 await Shell.Current.DisplayAlert("Fail", "Something went wrong while adding account book", "OK");
             else
             {
+                // alert message display https://github.com/dotnet/maui/discussions/3518
                 await Shell.Current.DisplayAlert("Success", "Account Book Added!", "OK");
             }
 
@@ -70,9 +72,11 @@ public partial class AccountViewModel : BaseViewModel
             int res = await accountBookService.EditAccountBookAsync(accountBook);
 
             if (res <= 0)
+                // alert message display https://github.com/dotnet/maui/discussions/3518
                 await Shell.Current.DisplayAlert("Fail", "Something went wrong while editing account book name", "OK");
             else
             {
+                // alert message display https://github.com/dotnet/maui/discussions/3518
                 await Shell.Current.DisplayAlert("Success", "Name Updated!", "OK");
             }
 
@@ -92,10 +96,12 @@ public partial class AccountViewModel : BaseViewModel
         {
             int res = await accountBookService.DeleteAccountBookByIDAsync(accountBook.ID);
             if (res == -1)
+                // alert message display https://github.com/dotnet/maui/discussions/3518
                 await Shell.Current.DisplayAlert("Error", "Failed to delete in database", "OK");
         }
         catch (Exception ex)
         {
+            // alert message display https://github.com/dotnet/maui/discussions/3518
             await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
         }
     }

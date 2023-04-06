@@ -56,6 +56,7 @@ public partial class EditViewModel : BaseViewModel
         int res = await recordService.EditRecordAsync(newRecord);
 
         if (res <= 0)
+            // alert message display https://github.com/dotnet/maui/discussions/3518
             await Shell.Current.DisplayAlert("Fail", "Something went wrong while editing record", "OK");
         else
         {
@@ -101,6 +102,7 @@ public partial class EditViewModel : BaseViewModel
             remarks = "";
 
         if (amount == 0)
+            // alert message display https://github.com/dotnet/maui/discussions/3518
             await Shell.Current.DisplayAlert("Wrong Input", "Please enter the amount", "OK");
 
         if (radioSelectionValue == "Expenses")
