@@ -122,7 +122,11 @@ public partial class AddViewModel : BaseViewModel
         {
             await Shell.Current.DisplayAlert("Success", "Record Added!", "OK");
 
-            Reset();
+            await Shell.Current.GoToAsync("..", true,
+                new Dictionary<string, object>
+                {
+                    {"Record", newRecord}
+                });
         }
     }
 }
